@@ -25,6 +25,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     Route::resource('patient', PatientController::class);
+    Route::get('patient-list', [PatientController::class, 'getPatient'])->name('patient.list');
 });
+Route::get('/greeting', function () {
+    return 'Hello World';
+})->name('greeting');
 
 require __DIR__.'/auth.php';

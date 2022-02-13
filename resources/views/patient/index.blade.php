@@ -1,8 +1,9 @@
 @extends('layouts.layout')
 @push('css')
-   <!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+     <!-- DataTables -->
+     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 @endpush
 @section('content')
 
@@ -28,56 +29,44 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="card card-lightblue">
+        <div class="card">
             <div class="card-header">
               <h3 class="card-title">{{ $title }}</h3>
             </div>
-            <form action="{{ $action }}" method="POST">
-                @csrf
-              <div class="card-body">
-                <div class="form-group">
-                  <label for="nama">Nama Pasien</label>
-                  <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama" required>
-                </div>
-                <div class="form-group">
-                    <label for="alamat">Alamat Pasien</label>
-                    <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat" required>
-                </div>
-                <div class="form-group">
-                    <label for="pekerjaan">Pekerjaan Pasien</label>
-                    <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder="Pekerjaan" required>
-                </div>
-                <div class="form-group">
-                    <label for="agama">Agama Pasien</label>
-                    <input type="text" class="form-control" id="agama" name="agama" placeholder="Agama" required>
-                </div>
-                <div class="form-group">
-                    <label for="umur">Umur Pasien</label>
-                    <input type="number" class="form-control" id="umur" name="umur" placeholder="Umur" required>
-                </div>
-                <div class="form-group">
-                    <label for="hp">Nomor Hp Pasien</label>
-                    <input type="text" class="form-control" id="hp" name="hp" placeholder="Nomor Hp" required>
-                </div>
-                <div class="form-group">
-                    <label>Jenis Kelamin</label>
-                    <select class="form-control select2" id="kelamin" name="kelamin" style="width: 100%;" required>
-                        <option value="Laki-Laki">Laki-Laki</option>
-                        <option vaelu="Perempuan">Perempuan</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Status Menikah</label>
-                    <select class="form-control select2" id="status_menikah" name="status_menikah" style="width: 100%;">
-                        <option value="Belum Menikah">Belum Menikah</option>
-                        <option value="Sudah Menikah">Sudah Menikah</option>
-                    </select>
-                  </div>
-              </div>
-              <div class="card-footer">
-                <button type="submit" class="btn btn-info">Submit</button>
-              </div>
-            </form>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="dataPatient" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Alamat</th>
+                    <th>Pekerjaan</th>
+                    <th>Agama</th>
+                    <th>Umur</th>
+                    <th>HandPhone</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Status Menikah</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Alamat</th>
+                    <th>Pekerjaan</th>
+                    <th>Agama</th>
+                    <th>Umur</th>
+                    <th>HandPhone</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Status Menikah</th>
+                    <th>Action</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
           </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -86,9 +75,43 @@
 
 @endsection
 @push('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-    <script>
-        $('.select2').select2()
-    </script>
+  <!-- DataTables  & Plugins -->
+  <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+  <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+  <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dataPatient').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('patient.list') }}",
+                columns: [
+                    {data: 'nama', name: 'nama'},
+                    {data: 'alamat', name: 'alamat'},
+                    {data: 'pekerjaan', name: 'pekerjaan'},
+                    {data: 'agama', name: 'agama'},
+                    {data: 'umur', name: 'umur'},
+                    {data: 'hp', name: 'hp'},
+                    {data: 'kelamin', name: 'kelamin'},
+                    {data: 'status_menikah', name: 'status_menikah'},
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: true,
+                        searchable: true
+                    },
+                ]
+            });
+
+        });
+      </script>
 @endpush

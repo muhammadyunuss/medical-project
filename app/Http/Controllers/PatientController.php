@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
-
+use DataTables;
 class PatientController extends Controller
 {
     /**
@@ -22,10 +23,17 @@ class PatientController extends Controller
         return view('patient.index',compact('title','action'));
     }
 
-    public function patientList(){
-        $model = Patient::get();
-        // return datatables()->of($model)
-        //     ->make(true);
+    public function getPatient(Request $request){
+        if ($request->ajax()) {
+            return DataTables::of(Patient::query())
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**
