@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('umur');
             $table->string('hp');
             $table->string('kelamin');
-            $table->string('status_kawin');
+            $table->string('status_menikah');
             $table->string('active')->default(1);
             $table->softDeletes();
             $table->string('created_by');
