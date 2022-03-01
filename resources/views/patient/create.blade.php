@@ -75,7 +75,8 @@
                   </div>
               </div>
               <div class="card-footer">
-                <button type="submit" class="btn btn-info">Submit</button>
+                <button type="submit" class="btn btn-info"><i class="fa fa-save"></i> Submit</button>
+                <a href="{{ route('patient.index') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back</a>
               </div>
             </form>
           </div>

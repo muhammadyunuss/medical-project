@@ -32,6 +32,9 @@
         <div class="card">
             <div class="card-header">
               <h3 class="card-title">{{ $title }}</h3>
+              <div class="card-tools">
+                <a href="{{ route('patient.create') }}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Add</a>
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
