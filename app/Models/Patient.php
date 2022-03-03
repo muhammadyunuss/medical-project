@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Patient extends Model
 {
     use HasFactory;
+
+    public function findData($patient)
+    {
+        return static::find($patient);
+    }
 }

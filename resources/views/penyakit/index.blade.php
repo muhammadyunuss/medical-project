@@ -1,9 +1,10 @@
 @extends('layouts.layout')
 @push('css')
-     <!-- DataTables -->
-     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 @endpush
 @section('content')
 
@@ -32,10 +33,15 @@
         <div class="card">
             <div class="card-header">
               <h3 class="card-title">{{ $title }}</h3>
+              <div class="card-tools">
+                <button style="float: right; font-weight: 900;" class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#CreateModal">
+                    Tambah Penyakit
+                </button>
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="dataPenyakit" class="table table-bordered table-striped">
+              <table id="dataPenyakit" class="table table-bordered table-striped datatable">
                 <thead>
                 <tr>
                     <th>Nama Penyakit</th>
@@ -61,6 +67,101 @@
     <!-- /.content -->
 </div>
 
+<!-- Create Article Modal -->
+<div class="modal fade" id="CreateModal">
+    <div class="modal-dialog CreateModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Tambah Penyakit</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                <strong>Success!</strong>Penyakit Berhasil di tambahkan.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="nama_penyakit">Nama Penyakit:</label>
+                <input type="text" class="form-control" name="nama_penyakit" id="nama_penyakit">
+            </div>
+
+            <div class="form-group">
+                <label for="keterangan">Keterangan:</label>
+                <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary" id="SubmitCreateForm">Simpan</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Edit Penyakit Modal -->
+<div class="modal" id="EditModal">
+    <div class="modal-dialog EditModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Penyakit</h4>
+          <button type="button" class="close modelClose" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                <button type="button" class="close modelClose" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                <p><strong>Success! </strong>Penyakit was added successfully.</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="EditModalBody">
+
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default modelClose" data-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-primary" id="SubmitEditForm">Edit</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Delete Article Modal -->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog DeleteModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Hapus Penyakit</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3>Apakah anda ingin menghapus data ini ?</h3>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-danger" id="SubmitDeleteForm">Iya</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 @endsection
 @push('scripts')
   <!-- DataTables  & Plugins -->
@@ -76,11 +177,13 @@
   <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
+  <script type="text/javascript">
+        $(function () {
             $('#dataPenyakit').DataTable({
                 processing: true,
                 serverSide: true,
+                dom: 'Bfrtip',
+                buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'],
                 ajax: "{{ route('penyakit.list') }}",
                 columns: [
                     {data: 'nama_penyakit', name: 'nama_penyakit'},
@@ -89,11 +192,134 @@
                         data: 'action',
                         name: 'action',
                         orderable: true,
-                        searchable: true
+                        searchable: true,
                     },
                 ]
             });
-
         });
-      </script>
+
+        // Create article Ajax request.
+        $('#SubmitCreateForm').click(function(e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{ route('penyakit.store') }}",
+                method: 'post',
+                data: {
+                    nama_penyakit: $('#nama_penyakit').val(),
+                    keterangan: $('#keterangan').val(),
+                },
+                success: function(result) {
+                    if(result.errors) {
+                        $('.alert-danger').html('');
+                        $.each(result.errors, function(key, value) {
+                            $('.alert-danger').show();
+                            $('.alert-danger').append('<strong><li>'+value+'</li></strong>');
+                        });
+                    } else {
+                        $('.alert-danger').hide();
+                        $('.alert-success').show();
+                        $('.datatable').DataTable().ajax.reload();
+                        setInterval(function(){
+                            $('.alert-success').hide();
+                            $('#CreateModal').modal('hide');
+                            location.reload();
+                        }, 2000);
+                    }
+                }
+            });
+        });
+
+
+        // Get single Penyakit in EditModel
+        $('.modelClose').on('click', function(){
+            $('#EditModal').hide();
+        });
+        var id;
+        $('body').on('click', '#getEditData', function(e) {
+            // e.preventDefault();
+            $('.alert-danger').html('');
+            $('.alert-danger').hide();
+            id = $(this).data('id');
+            $.ajax({
+                url: "penyakit/"+id+"/edit",
+                method: 'GET',
+                // data: {
+                //     id: id,
+                // },
+                success: function(result) {
+                    // console.log(result.html);
+                    $('#EditModalBody').html(result.html);
+                    $('#EditModal').show();
+                }
+            });
+        });
+
+        // Update article Ajax request.
+        $('#SubmitEditForm').click(function(e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "penyakit/"+id,
+                method: 'PUT',
+                data: {
+                    nama_penyakit: $('#editNamaPenyakit').val(),
+                    keterangan: $('#editKeterangan').val(),
+                },
+                success: function(result) {
+                    if(result.errors) {
+                        $('.alert-danger').html('');
+                        $.each(result.errors, function(key, value) {
+                            $('.alert-danger').show();
+                            $('.alert-danger').append('<strong><li>'+value+'</li></strong>');
+                        });
+                    } else {
+                        $('.alert-danger').hide();
+                        $('.alert-success').show();
+                        $('.datatable').DataTable().ajax.reload();
+                        setInterval(function(){
+                            $('.alert-success').hide();
+                            $('#EditModal').hide();
+                            location.reload();
+                        }, 2000);
+                    }
+                }
+            });
+        });
+
+         // Delete article Ajax request.
+         var deleteID;
+        $('body').on('click', '#getDeleteId', function(){
+            deleteID = $(this).data('id');
+        })
+        $('#SubmitDeleteForm').click(function(e) {
+            e.preventDefault();
+            var id = deleteID;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "penyakit/"+id,
+                method: 'DELETE',
+                success: function(result) {
+                    setInterval(function(){
+                        $('.datatable').DataTable().ajax.reload();
+                        $('#DeleteModal').hide();
+                        location.reload();
+                    }, 2000);
+                }
+            });
+        });
+  </script>
+
 @endpush

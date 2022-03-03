@@ -24,7 +24,8 @@ class StorePenyakitRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama_penyakit' => 'required',
+            'keterangan' => 'required',
         ];
     }
 }

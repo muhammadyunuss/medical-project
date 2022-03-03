@@ -13,7 +13,7 @@ class UpdatePenyakitRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class UpdatePenyakitRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama_penyakit' => 'required',
+            'keterangan' => 'required',
         ];
     }
 }

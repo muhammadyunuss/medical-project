@@ -27,9 +27,10 @@ class PenyakitController extends Controller
     public function getPenyakit(Request $request){
         if ($request->ajax()) {
             return DataTables::of(Penyakit::query())
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                    $actionBtn = '<button type="button" class="btn btn-success btn-sm" id="getEditData" data-id="'.$row->id.'">Edit</button>
+                    <button type="button" data-id="'.$row->id.'" data-toggle="modal" data-target="#DeleteModal" class="btn btn-danger btn-sm" id="getDeleteId">Hapus</button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -55,20 +56,10 @@ class PenyakitController extends Controller
      * @param  \App\Http\Requests\StorePenyakitRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePenyakitRequest $request)
+    public function store(StorePenyakitRequest $request, Penyakit $penyakit)
     {
-        $model = new Penyakit;
-        $model->nama_penyakit = $request->nama_penyakit;
-        $model->keterangan  = $request->keterangan;
-        $model->created_by = Auth::user()->name;
-        $model->updated_by = Auth::user()->name;
-        $model->save();
-
-        if(!$model->save()){
-            return redirect()->route('penyakit.index')->withFail('Error message');
-        }
-
-        return redirect()->route('penyakit.index')->withSuccess('Data Penyakit '.$request->nama_penyakit.' Berhasil di Simpan');
+        $penyakit->storeData(array_merge($request->all(), ['created_by' => Auth::user()->name]));
+        return response()->json(['success'=>'Data Penyakit '.$request->nama_penyakit.' Berhasil di Simpan']);
     }
 
     /**
@@ -90,7 +81,16 @@ class PenyakitController extends Controller
      */
     public function edit(Penyakit $penyakit)
     {
-        //
+        $html = '<div class="form-group">
+                    <label for="penyakit">Nama Penyakit:</label>
+                    <input type="text" class="form-control" name="nama_penyakit" id="editNamaPenyakit" value="'.$penyakit->nama_penyakit.'">
+                </div>
+                <div class="form-group">
+                    <label for="keterangan">Keterangan:</label>
+                    <textarea class="form-control" name="keterangan" id="editKeterangan">'.$penyakit->keterangan.'</textarea>
+                </div>';
+
+        return response()->json(['html'=>$html]);
     }
 
     /**
@@ -102,7 +102,8 @@ class PenyakitController extends Controller
      */
     public function update(UpdatePenyakitRequest $request, Penyakit $penyakit)
     {
-        //
+        $penyakit->updateData($penyakit->id, array_merge($request->all(), ['updated_by' => Auth::user()->name]));
+        return response()->json(['success'=>'Data Penyakit '.$request->nama_penyakit.' Berhasil di Update']);
     }
 
     /**
@@ -113,6 +114,7 @@ class PenyakitController extends Controller
      */
     public function destroy(Penyakit $penyakit)
     {
-        //
+        $penyakit->deleteData($penyakit->id);
+        return response()->json(['success'=>'Data Penyakit '.$penyakit->nama_penyakit.' Berhasil di Hapus']);
     }
 }

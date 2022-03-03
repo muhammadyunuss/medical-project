@@ -96,7 +96,20 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        //
+        $article = new Patient;
+        $model = $article->findData($patient);
+
+        $html = '<div class="form-group">
+                    <label for="Title">Title:</label>
+                    <input type="text" class="form-control" name="title" id="editTitle" value="'.$model->title.'">
+                </div>
+                <div class="form-group">
+                    <label for="Name">Description:</label>
+                    <textarea class="form-control" name="description" id="editDescription">'.$model->description.'
+                    </textarea>
+                </div>';
+
+        return response()->json(['html'=>$html]);
     }
 
     /**

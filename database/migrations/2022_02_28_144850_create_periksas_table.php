@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('periksas', function (Blueprint $table) {
+        Schema::create('periksa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
-            $table->date('tanggal_periksa');
-            $table->string('keluhan');
-            $table->string('diagnosa');
-            $table->string('penyakit');
-            $table->string('obat');
-            $table->string('keterangan');
-            $table->string('created_by');
-            $table->string('updated_by');
+            $table->foreignId('patient_id')->constrained('patient');
+            $table->date('tanggal_periksa')->nullable();
+            $table->string('keluhan')->nullable();
+            $table->string('diagnosa')->nullable();
+            $table->string('penyakit')->nullable();
+            $table->string('obat')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('periksas');
+        Schema::dropIfExists('periksa');
     }
 };

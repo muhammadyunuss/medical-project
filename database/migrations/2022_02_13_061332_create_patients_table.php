@@ -13,20 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('patients', function (Blueprint $table) {
+        Schema::create('patient', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('alamat');
-            $table->string('pekerjaan');
-            $table->string('agama');
-            $table->string('umur');
-            $table->string('hp');
-            $table->string('kelamin');
-            $table->string('status_menikah');
+            $table->string('nama')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('pekerjaan')->nullable();
+            $table->string('agama')->nullable();
+            $table->string('umur')->nullable();
+            $table->string('hp')->nullable();
+            $table->string('kelamin')->nullable();
+            $table->string('status_menikah')->nullable();
             $table->string('active')->default(1);
             $table->softDeletes();
-            $table->string('created_by');
-            $table->string('updated_by');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('patients');
+        Schema::dropIfExists('patient');
     }
 };

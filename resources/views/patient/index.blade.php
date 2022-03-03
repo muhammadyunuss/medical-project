@@ -33,7 +33,7 @@
             <div class="card-header">
               <h3 class="card-title">{{ $title }}</h3>
               <div class="card-tools">
-                <a href="{{ route('patient.create') }}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Add</a>
+                <a href="{{ route('patient.create') }}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Pasien</a>
               </div>
             </div>
             <!-- /.card-header -->
@@ -96,6 +96,8 @@
             $('#dataPatient').DataTable({
                 processing: true,
                 serverSide: true,
+                dom: 'Bfrtip',
+                buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'],
                 ajax: "{{ route('patient.list') }}",
                 columns: [
                     {data: 'nama', name: 'nama'},
