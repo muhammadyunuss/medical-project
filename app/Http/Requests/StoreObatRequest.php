@@ -13,7 +13,7 @@ class StoreObatRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreObatRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama_obat' => 'required',
+            'keterangan' => 'required',
         ];
     }
 }

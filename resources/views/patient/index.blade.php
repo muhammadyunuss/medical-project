@@ -96,8 +96,8 @@
             $('#dataPatient').DataTable({
                 processing: true,
                 serverSide: true,
-                dom: 'Bfrtip',
-                buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'],
+                // dom: 'Bfrtip',
+                // buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 ajax: "{{ route('patient.list') }}",
                 columns: [
                     {data: 'nama', name: 'nama'},

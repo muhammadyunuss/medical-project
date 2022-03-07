@@ -35,16 +35,16 @@
               <h3 class="card-title">{{ $title }}</h3>
               <div class="card-tools">
                 <button style="float: right; font-weight: 900;" class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#CreateModal">
-                    Tambah Penyakit
+                    Tambah Obat
                 </button>
               </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="dataPenyakit" class="table table-bordered table-striped datatable">
+              <table id="dataObat" class="table table-bordered table-striped datatable">
                 <thead>
                 <tr>
-                    <th>Nama Penyakit</th>
+                    <th>Nama Obat</th>
                     <th>Keterangan</th>
                     <th>Action</th>
                 </tr>
@@ -53,7 +53,7 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th>Nama Penyakit</th>
+                    <th>Nama Obat</th>
                     <th>Keterangan</th>
                     <th>Action</th>
                 </tr>
@@ -72,32 +72,23 @@
     <div class="modal-dialog CreateModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Tambah Penyakit</h4>
+          <h4 class="modal-title">Tambah Obat</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
-                <strong>Success!</strong>Penyakit Berhasil di tambahkan.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="form-group">
-                <label for="nama_penyakit">Nama Penyakit:</label>
-                <input type="text" class="form-control" name="nama_penyakit" id="nama_penyakit">
-            </div>
+            <form id="createFrom">
+                <div class="form-group">
+                    <label for="nama_obat">Nama Obat:</label>
+                    <input type="text" class="form-control" name="nama_obat" id="nama_obat">
+                </div>
 
-            <div class="form-group">
-                <label for="keterangan">Keterangan:</label>
-                <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="keterangan">Keterangan:</label>
+                    <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
+                </div>
+            </form>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -107,28 +98,17 @@
     </div>
 </div>
 
-<!-- Edit Penyakit Modal -->
+<!-- Edit Obat Modal -->
 <div class="modal" id="EditModal">
     <div class="modal-dialog EditModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Edit Penyakit</h4>
+          <h4 class="modal-title">Edit Obat</h4>
           <button type="button" class="close modelClose" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-                <button type="button" class="close modelClose" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
-                <p><strong>Success! </strong>Penyakit was added successfully.</p>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+        <div class="modal-body ">
             <div id="EditModalBody">
 
             </div>
@@ -146,7 +126,7 @@
     <div class="modal-dialog DeleteModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Hapus Penyakit</h4>
+          <h4 class="modal-title">Hapus Obat</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -155,8 +135,8 @@
           <h3>Apakah anda ingin menghapus data ini ?</h3>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-danger" id="SubmitDeleteForm">Iya</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+          <button type="button" class="btn btn-danger" id="SubmitDeleteForm">Ya</button>
         </div>
       </div>
     </div>
@@ -179,14 +159,14 @@
   <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
   <script type="text/javascript">
         $(function () {
-            $('#dataPenyakit').DataTable({
+            $('#dataObat').DataTable({
                 processing: true,
                 serverSide: true,
                 // dom: 'Bfrtip',
                 // buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'],
-                ajax: "{{ route('penyakit.list') }}",
+                ajax: "{{ route('obat.list') }}",
                 columns: [
-                    {data: 'nama_penyakit', name: 'nama_penyakit'},
+                    {data: 'nama_obat', name: 'nama_obat'},
                     {data: 'keterangan', name: 'keterangan'},
                     {
                         data: 'action',
@@ -207,10 +187,10 @@
                 }
             });
             $.ajax({
-                url: "{{ route('penyakit.store') }}",
+                url: "{{ route('obat.store') }}",
                 method: 'post',
                 data: {
-                    nama_penyakit: $('#nama_penyakit').val(),
+                    nama_obat: $('#nama_obat').val(),
                     keterangan: $('#keterangan').val(),
                 },
                 success: function(result) {
@@ -224,18 +204,19 @@
                         $('.alert-danger').hide();
                         $('.alert-success').show();
                         $('.datatable').DataTable().ajax.reload();
-                        setInterval(function(){
-                            $('.alert-success').hide();
-                            $('#CreateModal').modal('hide');
-                            location.reload();
-                        }, 2000);
+                        $('#CreateModal').modal('hide');
+                        let message = document.getElementById("message");
+                        let messageText = document.createTextNode("Data Berhasil Di Simpan!");
+                        message.appendChild(messageText);
+                        // location.reload();
+                        document.getElementById("createFrom").reset();
                     }
                 }
             });
         });
 
 
-        // Get single Penyakit in EditModel
+        // Get single Obat in EditModel
         $('.modelClose').on('click', function(){
             $('#EditModal').hide();
         });
@@ -246,7 +227,7 @@
             $('.alert-danger').hide();
             id = $(this).data('id');
             $.ajax({
-                url: "penyakit/"+id+"/edit",
+                url: "obat/"+id+"/edit",
                 method: 'GET',
                 // data: {
                 //     id: id,
@@ -268,10 +249,10 @@
                 }
             });
             $.ajax({
-                url: "penyakit/"+id,
+                url: "obat/"+id,
                 method: 'PUT',
                 data: {
-                    nama_penyakit: $('#editNamaPenyakit').val(),
+                    nama_obat: $('#editNamaObat').val(),
                     keterangan: $('#editKeterangan').val(),
                 },
                 success: function(result) {
@@ -285,18 +266,17 @@
                         $('.alert-danger').hide();
                         $('.alert-success').show();
                         $('.datatable').DataTable().ajax.reload();
-                        setInterval(function(){
-                            $('.alert-success').hide();
-                            $('#EditModal').hide();
-                            location.reload();
-                        }, 2000);
+                        $('#EditModal').hide();
+                        let message = document.getElementById("message");
+                        let messageText = document.createTextNode("Data Berhasil Di Update!");
+                        message.appendChild(messageText);
                     }
                 }
             });
         });
 
-         // Delete article Ajax request.
-         var deleteID;
+        // Delete article Ajax request.
+        var deleteID;
         $('body').on('click', '#getDeleteId', function(){
             deleteID = $(this).data('id');
         })
@@ -309,14 +289,16 @@
                 }
             });
             $.ajax({
-                url: "penyakit/"+id,
+                url: "obat/"+id,
                 method: 'DELETE',
                 success: function(result) {
-                    setInterval(function(){
-                        $('.datatable').DataTable().ajax.reload();
-                        $('#DeleteModal').hide();
-                        location.reload();
-                    }, 2000);
+                    $('.alert-danger').hide();
+                    $('.alert-success').show();
+                    $('.datatable').DataTable().ajax.reload();
+                    $('#DeleteModal').modal('hide');
+                    let message = document.getElementById("message");
+                    let messageText = document.createTextNode("Data Berhasil Di Hapus!");
+                    message.appendChild(messageText);
                 }
             });
         });

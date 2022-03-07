@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Penyakit;
 use App\Http\Requests\StorePenyakitRequest;
 use App\Http\Requests\UpdatePenyakitRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
 use DataTables;
 
 class PenyakitController extends Controller
@@ -27,7 +27,9 @@ class PenyakitController extends Controller
     public function getPenyakit(Request $request){
         if ($request->ajax()) {
             return DataTables::of(Penyakit::query())
-            ->addIndexColumn()
+            ->order(function ($query) {
+                $query->orderBy('created_at', 'desc');
+            })
             ->addColumn('action', function($row){
                     $actionBtn = '<button type="button" class="btn btn-success btn-sm" id="getEditData" data-id="'.$row->id.'">Edit</button>
                     <button type="button" data-id="'.$row->id.'" data-toggle="modal" data-target="#DeleteModal" class="btn btn-danger btn-sm" id="getDeleteId">Hapus</button>';

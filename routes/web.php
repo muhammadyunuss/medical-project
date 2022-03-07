@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{PatientController, PenyakitController, PeriksaController};
+use App\Http\Controllers\{ObatController, PatientController, PenyakitController, PeriksaController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +29,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('penyakit', PenyakitController::class);
     Route::get('penyakit-list', [PenyakitController::class, 'getPenyakit'])->name('penyakit.list');
+
+    Route::resource('obat', ObatController::class);
+    Route::get('obat-list', [ObatController::class, 'getObat'])->name('obat.list');
 
     Route::resource('periksa', PeriksaController::class);
 });
