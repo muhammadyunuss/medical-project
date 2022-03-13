@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periksa;
+use App\Models\Patient;
 use App\Http\Requests\StorePeriksaRequest;
 use App\Http\Requests\UpdatePeriksaRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
+use DataTables;
 
 class PeriksaController extends Controller
 {
@@ -16,7 +20,29 @@ class PeriksaController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Pemeriksaan List";
+        $action = url("/home");
+        return view('periksa.index',compact('title','action'));
+    }
+
+    public function getPeriksaPatient(Request $request){
+        if ($request->ajax()) {
+            return DataTables::of(Patient::query())
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="show-periksa-patient/'.$row->id.'" class="btn btn-success btn-sm">Pemeriksaan</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function showPeriksaPatient($patient_id){
+        $title = "Pemeriksaan List";
+        $action = url("/home");
+        $patient = Patient::where('id', $patient_id)->firstOrFail();
+        return view('periksa.show_periksa_patient', compact('patient', 'title', 'action'));
     }
 
     /**

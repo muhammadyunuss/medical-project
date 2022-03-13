@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('obat-list', [ObatController::class, 'getObat'])->name('obat.list');
 
     Route::resource('periksa', PeriksaController::class);
+    Route::get('periksa-patient-list', [PeriksaController::class, 'getPeriksaPatient'])->name('periksaPatient.list');
+    Route::get('show-periksa-patient/{patient_id}', [PeriksaController::class, 'showPeriksaPatient'])->name('showPeriksaPatient');
 });
 Route::get('/greeting', function () {
     return 'Hello World';
